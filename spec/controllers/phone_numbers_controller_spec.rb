@@ -10,9 +10,6 @@ RSpec.describe PhoneNumbersController, type: :controller do
     { number: nil, person_id: nil }
   }
 
-  # This should return the minimal set of values that should be in the session
-  # in order to pass any filters (e.g. authentication) defined in
-  # PhoneNumbersController. Be sure to keep this updated too.
   let(:valid_session) { {} }
 
   describe "GET #index" do
@@ -48,6 +45,10 @@ RSpec.describe PhoneNumbersController, type: :controller do
 
   describe "POST #create" do
     context "with valid params" do
+
+      let(:alice) { Person.create(first_name: 'Alice', last_name: 'Smith') }
+      let(:valid_attributes) { {number: '555-8888', person_id: alice.id} }  
+
       it "creates a new PhoneNumber" do
         expect {
           post :create, {:phone_number => valid_attributes}, valid_session
@@ -61,8 +62,10 @@ RSpec.describe PhoneNumbersController, type: :controller do
       end
 
       it "redirects to the created phone_number" do
+        alice = Person.create(first_name: 'Alice', last_name: 'Smith')
+        valid_attributes = {number: '555-8888', person_id: alice.id}
         post :create, {:phone_number => valid_attributes}, valid_session
-        expect(response).to redirect_to(PhoneNumber.last)
+        expect(response).to redirect_to(alice)
       end
     end
 
