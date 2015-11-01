@@ -13,6 +13,10 @@ RSpec.describe Person, type: :model do
     expect(person.phone_numbers).to eq([])
   end
 
+  it 'has an array of email addresses' do
+    expect(person.email_addresses).to eq([])
+  end
+
   it 'is invalid without a first name' do
     person.first_name = nil
     expect(person).not_to be_valid
