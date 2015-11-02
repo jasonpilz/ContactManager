@@ -3,11 +3,11 @@ require 'rails_helper'
 RSpec.describe EmailAddressesController, type: :controller do
 
   let(:valid_attributes) {
-    { address: "jasonpilz@gmail.com", person_id: 2 }
+    { address: "jasonpilz@gmail.com", contact_id: 2, contact_type: 'Person' }
   }
 
   let(:invalid_attributes) {
-    { address: nil, person_id: nil }
+    { address: nil, contact_id: nil, contact_type: nil }
   }
 
   let(:valid_session) { {} }
@@ -47,7 +47,7 @@ RSpec.describe EmailAddressesController, type: :controller do
     context "with valid params" do
 
       let(:bob) { Person.create(first_name: 'Bob', last_name: 'Jones') }
-      let(:valid_attributes) { {address: 'bob@gmail.com', person_id: bob.id} }
+      let(:valid_attributes) { {address: 'bob@gmail.com', contact_id: bob.id, contact_type: 'Person' } }
 
       it "creates a new EmailAddress" do
         expect {
@@ -63,7 +63,7 @@ RSpec.describe EmailAddressesController, type: :controller do
 
       it "redirects to the created email_address" do
         bob = Person.create(first_name: 'Bob', last_name: 'Jones')
-        valid_attributes = {address: 'bob@gmail.com', person_id: bob.id}
+        valid_attributes = {address: 'bob@gmail.com', contact_id: bob.id, contact_type: 'Person' }
         post :create, {:email_address => valid_attributes}, valid_session
         expect(response).to redirect_to(bob)
       end
@@ -86,15 +86,15 @@ RSpec.describe EmailAddressesController, type: :controller do
     context "with valid params" do
 
       let(:bob) { Person.create(first_name: 'Bob', last_name: 'Jones') }
-      let(:valid_attributes) { { address: 'bob@gmail.com', person_id: bob.id } }
-      let(:new_attributes) { { address: "bobthegamer@gmail.com", person_id: bob.id } }
+      let(:valid_attributes) { { address: 'bob@gmail.com', contact_id: bob.id, contact_type: 'Person' } }
+      let(:new_attributes) { { address: "bobthegamer@gmail.com", contact_id: bob.id, contact_type: 'Person' } }
 
       it "updates the requested email_address" do
         email_address = EmailAddress.create! valid_attributes
         put :update, {:id => email_address.to_param, :email_address => new_attributes}, valid_session
         email_address.reload
         expect(email_address.address).to eq("bobthegamer@gmail.com")
-        expect(email_address.person_id).to eq(bob.id)
+        expect(email_address.contact_id).to eq(bob.id)
       end
 
       it "assigns the requested email_address as @email_address" do
@@ -105,7 +105,7 @@ RSpec.describe EmailAddressesController, type: :controller do
 
       it "redirects to the person" do
         bob = Person.create(first_name: 'Bob', last_name: 'Jones')
-        valid_attributes = {address: 'bob@gmail.com', person_id: bob.id}
+        valid_attributes = {address: 'bob@gmail.com', contact_id: bob.id, contact_type: 'Person' }
         email_address = EmailAddress.create! valid_attributes
         put :update, {:id => email_address.to_param, :email_address => valid_attributes}, valid_session
         expect(response).to redirect_to(bob)
@@ -130,7 +130,7 @@ RSpec.describe EmailAddressesController, type: :controller do
   describe "DELETE #destroy" do
 
     let(:bob) { Person.create(first_name: 'Bob', last_name: 'Jones') }
-    let(:valid_attributes) { { address: 'bob@gmail.com', person_id: bob.id } }
+    let(:valid_attributes) { { address: 'bob@gmail.com', contact_id: bob.id, contact_type: 'Person' } }
 
     it "destroys the requested email_address" do
       email_address = EmailAddress.create! valid_attributes
@@ -142,7 +142,7 @@ RSpec.describe EmailAddressesController, type: :controller do
     it "redirects to the email_addresses list" do
       email_address = EmailAddress.create! valid_attributes
       delete :destroy, {:id => email_address.to_param}, valid_session
-      expect(response).to redirect_to(email_address.person)
+      expect(response).to redirect_to(email_address.contact)
     end
   end
 
